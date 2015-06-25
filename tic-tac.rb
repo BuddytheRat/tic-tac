@@ -14,23 +14,25 @@ class TicTac
 
   def new_game
     @gameboard = Board.new(3, 3)
-    @current_player = decide_start_player(@player1, @player2)
+    decide_start_player(@player1, @player2)
+    alert("#{@current_player.name} is the starting player!")
     main_loop
   end
 
   private
   def decide_start_player(player1, player2)
-    return [player1, player2].shuffle
-    alert("#{@current_player[0].name} is the starting player!")
+    player_array = [player1, player2]
+    @current_player = player_array.shuffle.first
+    @inactive_player = player_array.last
   end
 
   def next_player
-    @current_player << @current_player.shift
-    alert("#{@current_player[0].name}'s turn!")
+    @current_player, @inactive_player = @inactive_player, @current_player
+    alert("#{@current_player.name}'s turn!")
   end
 
   def ask_for_next_move
-    symbol = @current_player[0].symbol
+    symbol = @current_player.symbol
     query("Where will you place an #{symbol}?", @gameboard.empty_spaces)
   end
 
@@ -42,7 +44,7 @@ class TicTac
       print ", " unless i == options.size-1
     end
     print "\n"
-    @current_player[0].choose
+    @current_player.choose
   end
 
   def alert(alert)
@@ -64,11 +66,11 @@ class TicTac
       choice = ask_for_next_move
       case choice
         when /\d/
-          @gameboard.add_symbol(choice, @current_player[0].symbol)
+          @gameboard.add_symbol(choice, @current_player.symbol)
         when /quit/i
           resign
         when 'invalid'
-          alert("Whoops! That's not quite right, #{@current_player[0].name}. Try again!")
+          alert("Whoops! That's not quite right, #{@current_player.name}. Try again!")
           redo
       end
       next_player
