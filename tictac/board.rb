@@ -42,25 +42,25 @@ class TicTac
     end
 
     def add_symbol(num, symbol)
-      each_cell do |cell|
-          if cell == num
-            cell = symbol
-            break
-          end
+      each_cell do |x, y|
+        if @gameboard[x][y] == num
+          @gameboard[x][y] = symbol
+          break
+        end
       end
     end
 
     private
     def each_row
-      @gameboard.each do |row|
-          yield(row)
+      @gameboard.each_with_index do |row, x|
+          yield(row, x)
       end        
     end 
 
     def each_cell
-      each_row do |row|
-        row.each do |cell|
-          yield(cell)
+      each_row do |row, x|
+        row.each_with_index do |cell, y|
+          yield(x, y)
         end
       end
     end

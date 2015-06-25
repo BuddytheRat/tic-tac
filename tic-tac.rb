@@ -6,16 +6,15 @@ class TicTac
   require 'tictac/computer'
 
   def initialize;
-    @player = Player.new("BuddytheRat", "X")
-    @computer = Computer.new("Kihara", "O")
+    @player1 = Player.new("BuddytheRat", "X")
+    @player2 = Player.new("Kihara", "O")
     @alert_stack = []
     new_game
   end
 
   def new_game
     @gameboard = Board.new(3, 3)
-    @current_player = decide_start_player(@player, @computer)
-    alert(:start_player)
+    @current_player = decide_start_player(@player1, @player2)
     main_loop
   end
 
