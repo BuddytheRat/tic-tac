@@ -15,11 +15,6 @@ class TicTac
   def new_game
     @gameboard = Board.new(3, 3)
     @current_player = decide_start_player(@player, @computer)
-    @alerts = {
-      start_player: "#{@current_player[0].name} is the starting player!",
-      your_turn: "#{@current_player[0].name}'s turn!",
-      invalid_choice: "Whoops! That's not quite right, #{@current_player[0].name}. Try again!"
-    }
     alert(:start_player)
     main_loop
   end
@@ -27,16 +22,17 @@ class TicTac
   private
   def decide_start_player(player1, player2)
     return [player1, player2].shuffle
+    alert("#{@current_player[0].name} is the starting player!")
   end
 
   def next_player
     @current_player << @current_player.shift
-    alert(:your_turn)
+    alert("#{@current_player[0].name}'s turn!")
   end
 
   def ask_for_next_move
     symbol = @current_player[0].symbol
-    return query("Where will you place an #{symbol}?", @gameboard.empty_spaces)
+    query("Where will you place an #{symbol}?", @gameboard.empty_spaces)
   end
 
   def query(question, options);
@@ -51,7 +47,7 @@ class TicTac
   end
 
   def alert(alert)
-    @alert_stack << @alerts[alert]
+    @alert_stack << alert
   end
 
   def display_alerts
@@ -73,9 +69,10 @@ class TicTac
         when /quit/i
           resign
         when 'invalid'
-          alert(:invalid_choice)
+          alert("Whoops! That's not quite right, #{@current_player[0].name}. Try again!")
           redo
       end
+      next_player
     end
   end
 end

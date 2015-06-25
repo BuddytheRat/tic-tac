@@ -24,7 +24,7 @@ class TicTac
       line = ((@border[:corner] + @border[:top])*@width) + @border[:corner]
       # puts board here:
       puts line
-      each_row do |row, x|
+      each_row do |row|
         row.each_with_index do |cell, y|
           print @border[:side] + cell
           print @border[:side] + "\n" if y == @width-1
@@ -35,16 +35,16 @@ class TicTac
 
     def empty_spaces
       empty_spaces = []
-      each_cell do |pos|
-        empty_spaces << pos[:cell] if pos[:cell] =~ /\d/
+      each_cell do |cell|
+        empty_spaces << cell if cell =~ /\d/
       end
       return empty_spaces
     end
 
     def add_symbol(num, symbol)
-      each_cell do |pos|
-          if pos[:cell] == num
-            pos[:cell] = symbol
+      each_cell do |cell|
+          if cell == num
+            cell = symbol
             break
           end
       end
@@ -52,20 +52,15 @@ class TicTac
 
     private
     def each_row
-      @gameboard.each_with_index do |row, x|
-          yield(row, x)
+      @gameboard.each do |row|
+          yield(row)
       end        
     end 
 
     def each_cell
-      each_row do |row, x|
-        row.each_with_index do |cell, y|
-          yield({
-            row: row, 
-            cell: cell, 
-            x: x, 
-            y: y
-          })
+      each_row do |row|
+        row.each do |cell|
+          yield(cell)
         end
       end
     end
