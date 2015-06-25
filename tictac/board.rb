@@ -35,7 +35,8 @@ class TicTac
 
     def empty_spaces
       empty_spaces = []
-      each_cell do |cell|
+      each_cell do |x, y|
+        cell = @gameboard[x][y]
         empty_spaces << cell if cell =~ /\d/
       end
       return empty_spaces
