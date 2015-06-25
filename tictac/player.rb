@@ -7,8 +7,7 @@ class TicTac
     end
     def choose
       choice = gets.chomp
-      # verify choice is valid (is one of available numbers)
-      # choice = choose() if (invalid)
+      
       choice
     end
   end

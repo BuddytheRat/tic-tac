@@ -39,7 +39,7 @@ class TicTac
   def query(question, options);
     puts question
     print "Choose: "
-    options.each_with_index do |option, i| 
+    options.each_with_index do |option, i|
       print "#{option}"
       print ", " unless i == options.size-1
     end
@@ -65,11 +65,11 @@ class TicTac
       display_alerts
       choice = ask_for_next_move
       case choice
-        when /\d/
+        when /\d/ #Cell
           @gameboard.add_symbol(choice, @current_player.symbol)
-        when /quit/i
+        when :quit #Quit
           resign
-        when 'invalid'
+        when :invalid #Invalid
           alert("Whoops! That's not quite right, #{@current_player.name}. Try again!")
           redo
       end

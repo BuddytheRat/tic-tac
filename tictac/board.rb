@@ -2,13 +2,17 @@ class TicTac
   class Board
     def initialize(x, y)
       @border = {
+        padding: '/',
         top: '~',
-        side: ':',
+        side: '|',
         corner: '.'
       }
+      @left_padding = 10
+      @top_padding = 2
       @width = x
       @height = y
       @char_width = (@width*2)+1
+      @display_width = (@left_padding * 2) + @char_width
       #create 2d array with numbered cells
       @gameboard = Array.new(@width) { Array.new(@height) }
       cell_number = 1
@@ -21,16 +25,22 @@ class TicTac
     end
 
     def display
-      line = ((@border[:corner] + @border[:top])*@width) + @border[:corner]
-      # puts board here:
+      left_pad = @border[:padding] * @left_padding
+      line = left_pad + ((@border[:corner] + @border[:top])*@width) + @border[:corner] + left_pad
+      pad_top = ((@border[:padding] * @display_width) + "\n") * @top_padding
+
+      # print board here:
+      print pad_top
       puts line
       each_row do |row|
+        print left_pad
         row.each_with_index do |cell, y|
           print @border[:side] + cell
-          print @border[:side] + "\n" if y == @width-1
         end
+        print @border[:side] + left_pad + "\n"
         puts line
       end
+      print pad_top
     end
 
     def empty_spaces
