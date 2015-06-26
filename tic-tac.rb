@@ -6,33 +6,32 @@ class TicTac
   require 'tictac/computer'
 
   def initialize;
-    @player1 = Player.new("BuddytheRat", "X")
-    @player2 = Player.new("Kihara", "O")
-    @alert_stack = []
+    Player.new("BuddytheRat", "X")
+    Player.new("Kihara", "O")
+    #Player.new("Buttface", "W")
+    @alert_stack = Array.new
     new_game
   end
 
   def new_game
     @gameboard = Board.new(3, 3)
-    decide_start_player(@player1, @player2)
-    alert("#{@current_player.name} is the starting player!")
+    decide_turn_order
+    alert("#{Player.current.name} is the starting player!")
     main_loop
   end
 
   private
-  def decide_start_player(player1, player2)
-    player_array = [player1, player2]
-    @current_player = player_array.shuffle.first
-    @inactive_player = player_array.last
+  def decide_turn_order()
+    Player.all.shuffle.first
   end
 
   def next_player
-    @current_player, @inactive_player = @inactive_player, @current_player
-    alert("#{@current_player.name}'s turn!")
+    Player.all << Player.all.shift
+    alert("#{Player.current.name}'s turn!")
   end
 
   def ask_for_next_move
-    symbol = @current_player.symbol
+    symbol = Player.current.symbol
     query("Where will you place an #{symbol}?", @gameboard.empty_spaces)
   end
 
@@ -44,7 +43,7 @@ class TicTac
       print ", " unless i == options.size-1
     end
     print "\n"
-    @current_player.choose
+    Player.current.choose
   end
 
   def alert(alert)
@@ -52,11 +51,13 @@ class TicTac
   end
 
   def display_alerts
-      puts @alert_stack
-      @alert_stack.clear
+    puts @alert_stack
+    @alert_stack.clear
   end
 
-  def game_over?; end
+  def game_over?
+    #Check for win conditions
+  end
 
   def main_loop
     while !(game_over?)
@@ -64,13 +65,15 @@ class TicTac
       @gameboard.display
       display_alerts
       choice = ask_for_next_move
+
       case choice
         when /\d/ #Cell
-          @gameboard.add_symbol(choice, @current_player.symbol)
+          @gameboard.add_symbol(choice, Player.current.symbol)
+
         when :quit #Quit
           resign
         when :invalid #Invalid
-          alert("Whoops! That's not quite right, #{@current_player.name}. Try again!")
+          alert("Whoops! That's not quite right, #{Player.current.name}. Try again!")
           redo
       end
       next_player

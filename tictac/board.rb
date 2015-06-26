@@ -7,12 +7,12 @@ class TicTac
         side: '|',
         corner: '.'
       }
-      @left_padding = 10
+      @left_padding = 15
       @top_padding = 2
       @width = x
       @height = y
-      @char_width = (@width*2)+1
-      @display_width = (@left_padding * 2) + @char_width
+      @board_width = (@width*2)+1
+      @display_width = (@left_padding * 2) + @board_width
       #create 2d array with numbered cells
       @gameboard = Array.new(@width) { Array.new(@height) }
       cell_number = 1
@@ -76,8 +76,16 @@ class TicTac
       end
     end
 
-    def game_won?
+    def each_triple
+      each_row do |row, x|
+        
+      end
+    end
 
+    def game_won?
+      each_cell do |x, y|
+        
+      end
     end
   end
 end
