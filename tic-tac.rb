@@ -8,7 +8,7 @@ class TicTac
   def initialize;
     Player.new("BuddytheRat", "X")
     Player.new("Kihara", "O")
-    #Player.new("Buttface", "W")
+    Player.new("Buttface", "W")
     @alert_stack = Array.new
     new_game
   end
@@ -22,7 +22,7 @@ class TicTac
 
   private
   def decide_turn_order()
-    Player.all.shuffle.first
+    Player.all.shuffle!
   end
 
   def next_player
@@ -69,7 +69,6 @@ class TicTac
       case choice
         when /\d/ #Cell
           @gameboard.add_symbol(choice, Player.current.symbol)
-
         when :quit #Quit
           resign
         when :invalid #Invalid
