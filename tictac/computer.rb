@@ -1,7 +1,7 @@
 class TicTac
   class Computer < Player
-    def choose;
-    	puts "BOOKGKJAGAJFG!"
+    def choose(options)
+    	options.sample
     end
   end
 end

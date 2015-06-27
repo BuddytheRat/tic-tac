@@ -1,24 +1,23 @@
 class TicTac
   class Board
-    def initialize(x, y)
+    def initialize(size)
       @border = {
-        padding: '/',
-        top: '~',
-        side: '|',
-        corner: '.'
+        padding: ' ',
+        top: '=',
+        side: '!',
+        corner: '-'
       }
-      @left_padding = 15
+      @left_padding = 12
       @top_padding = 2
-      @width = x
-      @height = y
-      @board_width = (@width*2)+1
+      @size = size
+      @board_width = (@size*2)+1
       @display_width = (@left_padding * 2) + @board_width
       #create 2d array with numbered cells
-      @gameboard = Array.new(@width) { Array.new(@height) }
+      @gameboard = Array.new(@size) { Array.new(@size) }
       cell_number = 1
-      @width.times do |x|
-        @height.times do |y|
-          @gameboard[x][y] = cell_number.to_s
+      @size.times do |x|
+        @size.times do |y|
+          @gameboard[x][y] = cell_number
           cell_number += 1
         end 
       end
@@ -26,7 +25,7 @@ class TicTac
 
     def display
       left_pad = @border[:padding] * @left_padding
-      line = left_pad + ((@border[:corner] + @border[:top])*@width) + @border[:corner] + left_pad
+      line = left_pad + ((@border[:corner] + @border[:top])*@size) + @border[:corner] + left_pad
       pad_top = ((@border[:padding] * @display_width) + "\n") * @top_padding
 
       # print board here:
@@ -35,7 +34,7 @@ class TicTac
       each_row do |row|
         print left_pad
         row.each_with_index do |cell, y|
-          print @border[:side] + cell
+          print @border[:side] + cell.to_s
         end
         print @border[:side] + left_pad + "\n"
         puts line
@@ -47,7 +46,7 @@ class TicTac
       empty_spaces = []
       each_cell do |x, y|
         cell = @gameboard[x][y]
-        empty_spaces << cell if cell =~ /\d/
+        empty_spaces << cell if cell.to_s =~ /\d/
       end
       return empty_spaces
     end
@@ -59,6 +58,37 @@ class TicTac
           break
         end
       end
+    end
+
+    def winning_combos
+      combos = Array.new
+      # rows
+      each_row { |row| combos << row.dup }
+      # columns
+      @size.times do |y|
+        combo = Array.new
+        @size.times do |x|
+          combo << @gameboard[x][y]
+        end
+        combos << combo.dup
+      end
+      # diagonal
+      combo = Array.new
+      y = 0
+      @size.times do |x|
+        combo << @gameboard[x][y]
+        y += 1
+      end
+      combos << combo.dup
+      # anti-diagonal
+      combo = Array.new
+      y = 2
+      @size.times do |x|
+        combo << @gameboard[x][y]
+        y -= 1
+      end
+      combos << combo
+      combos
     end
 
     private
@@ -76,15 +106,9 @@ class TicTac
       end
     end
 
-    def each_triple
-      each_row do |row, x|
-        
-      end
-    end
-
     def game_won?
       each_cell do |x, y|
-        
+
       end
     end
   end

@@ -6,18 +6,19 @@ class TicTac
   require 'tictac/computer'
 
   def initialize;
-    Player.new("BuddytheRat", "X")
-    Player.new("Kihara", "O")
-    Player.new("Buttface", "W")
+    Player.new("BuddytheRat", "B")
+    Computer.new("Kihara", "K")
+    Computer.new("Buttface", "W")
     @alert_stack = Array.new
     new_game
   end
 
   def new_game
-    @gameboard = Board.new(3, 3)
+    @gameboard = Board.new(5)
+    Player.all.each { |player| player.winning_combos = @gameboard.winning_combos }
     decide_turn_order
     alert("#{Player.current.name} is the starting player!")
-    main_loop
+    game_loop
   end
 
   private
@@ -31,19 +32,18 @@ class TicTac
   end
 
   def ask_for_next_move
-    symbol = Player.current.symbol
-    query("Where will you place an #{symbol}?", @gameboard.empty_spaces)
+    query("Where will you place an #{Player.current.symbol}?", @gameboard.empty_spaces)
   end
 
   def query(question, options);
     puts question
     print "Choose: "
     options.each_with_index do |option, i|
-      print "#{option}"
+      print "#{option.to_s}"
       print ", " unless i == options.size-1
     end
     print "\n"
-    Player.current.choose
+    Player.current.choose(options)
   end
 
   def alert(alert)
@@ -55,28 +55,33 @@ class TicTac
     @alert_stack.clear
   end
 
-  def game_over?
-    #Check for win conditions
+  def refresh_screen
+    system('cls')
+    @gameboard.display
+    display_alerts
   end
 
-  def main_loop
-    while !(game_over?)
-      system('cls')
-      @gameboard.display
-      display_alerts
-      choice = ask_for_next_move
+  def game_loop
+    loop do
+      refresh_screen
+      if Player.current.has_won?
+        alert("#{Player.current.name} is the winner!")
+        break
+      end
 
-      case choice
-        when /\d/ #Cell
+      choice = ask_for_next_move
+      case
+        when choice.is_a?(Integer)
           @gameboard.add_symbol(choice, Player.current.symbol)
-        when :quit #Quit
-          resign
-        when :invalid #Invalid
+          Player.current.update_combos(choice)
+        else
           alert("Whoops! That's not quite right, #{Player.current.name}. Try again!")
           redo
       end
-      next_player
+
+      next_player unless Player.current.has_won?
     end
+    refresh_screen
   end
 end
 
