@@ -5,7 +5,9 @@ class TicTac
         padding: ' ',
         top: '=',
         side: '!',
-        corner: '-'
+        corner: '-',
+        underline: ' ',
+        pad: ' '
       }
       @left_padding = 12
       @top_padding = 2
@@ -24,22 +26,23 @@ class TicTac
     end
 
     def display
-      left_pad = @border[:padding] * @left_padding
-      line = left_pad + ((@border[:corner] + @border[:top])*@size) + @border[:corner] + left_pad
-      pad_top = ((@border[:padding] * @display_width) + "\n") * @top_padding
-
-      # print board here:
-      print pad_top
-      puts line
+      row1_4 = "#{@border[:corner]}#{@border[:top] * ((@size * 4) - 1)}#{@border[:corner]}\n"
+      row2_3 = ((@border[:side] + (@border[:underline] * 3)) * @size) + @border[:side] + "\n"
       each_row do |row|
-        print left_pad
+        print row1_4
+        print row2_3
         row.each_with_index do |cell, y|
-          print @border[:side] + cell.to_s
+          if (cell.is_a?(Integer))
+            cell = cell.to_s.rjust(3, "0")
+          else
+            cell = cell.center(3, @border[:pad])
+          end
+          print @border[:side] + cell
+          print @border[:side] + "\n" if y == @size - 1
         end
-        print @border[:side] + left_pad + "\n"
-        puts line
+        print row2_3
       end
-      print pad_top
+      print row1_4
     end
 
     def empty_spaces

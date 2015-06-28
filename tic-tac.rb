@@ -6,7 +6,7 @@ class TicTac
   require 'tictac/computer'
 
   def initialize;
-    Computer.new("BuddytheRat", "X")
+    Player.new("BuddytheRat", "X")
     Computer.new("Kihara", "O")
     @alert_stack = Array.new
     new_game
