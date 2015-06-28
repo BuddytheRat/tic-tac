@@ -91,6 +91,12 @@ class TicTac
       combos
     end
 
+    def is_draw?
+      draw = false
+      draw = true if empty_spaces == []
+      draw
+    end
+
     private
     def each_row
       @gameboard.each_with_index do |row, x|
@@ -103,12 +109,6 @@ class TicTac
         row.each_with_index do |cell, y|
           yield(x, y)
         end
-      end
-    end
-
-    def game_won?
-      each_cell do |x, y|
-
       end
     end
   end

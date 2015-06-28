@@ -6,15 +6,14 @@ class TicTac
   require 'tictac/computer'
 
   def initialize;
-    Player.new("BuddytheRat", "B")
-    Computer.new("Kihara", "K")
-    Computer.new("Buttface", "W")
+    Computer.new("BuddytheRat", "X")
+    Computer.new("Kihara", "O")
     @alert_stack = Array.new
     new_game
   end
 
   def new_game
-    @gameboard = Board.new(5)
+    @gameboard = Board.new(3)
     Player.all.each { |player| player.winning_combos = @gameboard.winning_combos }
     decide_turn_order
     alert("#{Player.current.name} is the starting player!")
@@ -66,6 +65,9 @@ class TicTac
       refresh_screen
       if Player.current.has_won?
         alert("#{Player.current.name} is the winner!")
+        break
+      elsif @gameboard.is_draw?
+        alert("It's a draw! Nobody wins!")
         break
       end
 
